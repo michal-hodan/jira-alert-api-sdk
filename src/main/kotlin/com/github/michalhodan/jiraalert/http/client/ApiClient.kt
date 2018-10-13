@@ -1,22 +1,38 @@
 package com.github.michalhodan.jiraalert.http.client
 
-import java.util.*
+import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.michalhodan.jiraalert.http.Credentials
+import com.github.michalhodan.jiraalert.http.request.Request
+import com.github.michalhodan.jiraalert.http.response.IResponse
+import com.github.michalhodan.jiraalert.http.response.Response
+import com.github.michalhodan.jiraalert.http.response.StatusCode
 
-abstract class ApiClient(credentials: Credentials) {
+sealed class ApiClient(credentials: Credentials): IApiClient {
 
     init {
         FuelManager.instance.basePath = credentials.url
     }
 
-    class HttpAuth(credentials: Credentials.HttpAuth): ApiClient(credentials) {
-        init {
-            val authToken = credentials.run { "$username:$password" }.toBase64()
-            FuelManager.instance.baseHeaders =  mapOf("Authorization" to "Basic $authToken")
+    override suspend fun request(request: Request): IResponse {
+        val result = when(request) {
+            is Request.Get -> Fuel.get(request.path).responseString()
+            is Request.Post -> Fuel.post(request.path).responseString()
         }
-        private fun String.toBase64(): String = Base64.getEncoder().encodeToString(this.toByteArray())
+
+       return result.second.run {
+           @Suppress("USELESS_ELVIS") // status code doesn't have to follow standard
+           Response(
+               statusCode = StatusCode.values()[statusCode] ?: StatusCode.UNKNOWN,
+               headers = headers,
+               body = dataStream
+           )
+       }
     }
 
-
+    class Basic(credentials: Credentials): ApiClient(credentials) {
+        init {
+            FuelManager.instance.baseHeaders = mapOf("Authorization" to "Basic ${credentials.authToken}")
+        }
+    }
 }

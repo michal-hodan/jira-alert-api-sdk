@@ -1,6 +1,15 @@
 package com.github.michalhodan.jiraalert.http
 
-sealed class Credentials(val url: String) {
+import java.util.*
 
-    class HttpAuth(url: String, val username:  String, val password: String): Credentials(url)
+sealed class Credentials(val url: String, val authToken: String) {
+
+    class HttpAuth constructor(url: String, authToken: String): Credentials(url, authToken) {
+
+        constructor(url: String,  username: String, password: String): this(url, "$username:$password".toBase64())
+
+        private companion object {
+            fun String.toBase64(): String = Base64.getEncoder().encodeToString(this.toByteArray())
+        }
+    }
 }
