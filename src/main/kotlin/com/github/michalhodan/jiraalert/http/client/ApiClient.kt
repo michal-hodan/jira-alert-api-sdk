@@ -21,9 +21,8 @@ sealed class ApiClient(credentials: Credentials): IApiClient {
         }
 
        return result.second.run {
-           @Suppress("USELESS_ELVIS") // status code doesn't have to follow standard
            Response(
-               statusCode = StatusCode.values()[statusCode] ?: StatusCode.UNKNOWN,
+               statusCode = StatusCode.valueOf(statusCode) ?: StatusCode.UNKNOWN,
                headers = headers,
                body = dataStream
            )

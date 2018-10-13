@@ -1,5 +1,7 @@
 package com.github.michalhodan.jiraalert.http.response
 
+import java.util.HashMap
+
 enum class StatusCode(val code: Int) {
     CONTINUE(100), SWITCHING_PROTOCOLS(101), PROCESSING(102),
 
@@ -11,5 +13,18 @@ enum class StatusCode(val code: Int) {
 
     INTERNAL_SERVER_ERROR(500), NOT_IMPLEMENTED(501), BAD_GATEWAY(502), SERVICE_UNAVAILABLE(503), GATEWAY_TIMEOUT(504), HTTP_VERSION_NOT_SUPPORTED(505), VARIANT_ALSO_NEGOTIATES(506), INSUFFICIENT_STORAGE(507), LOOP_DETECTED(508), NOT_EXTENDED(510), NETWORK_AUTHENTICATION_REQUIRED(511),
 
-    UNKNOWN(0)
+    UNKNOWN(0);
+
+    companion object {
+        private val map = HashMap<Int, StatusCode>(StatusCode.values().size)
+
+        init {
+            StatusCode.values().forEach {
+                map[it.code] = it
+            }
+        }
+
+        fun valueOf(code: Int) = map[code]
+    }
+
 }
