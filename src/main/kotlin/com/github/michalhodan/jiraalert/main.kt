@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     )
 
     runBlocking {
-        Myself(client, JsonParser()).test()
+        Myself(client, JsonParser()).get()
     }
 }
 

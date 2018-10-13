@@ -1,4 +1,8 @@
 package com.github.michalhodan.jiraalert.parser
 
-interface IJsonParser: IParser {
+import kotlin.reflect.KClass
+
+interface IJsonParser {
+
+    fun <T: Any>deserialize(data: String, `class`: KClass<T>): T
 }

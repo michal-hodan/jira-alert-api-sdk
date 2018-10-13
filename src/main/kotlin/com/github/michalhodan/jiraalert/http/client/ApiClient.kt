@@ -20,11 +20,11 @@ sealed class ApiClient(credentials: Credentials): IApiClient {
             is Request.Post -> Fuel.post(request.path).responseString()
         }
 
-       return result.second.run {
+       return result.run {
            Response(
-               statusCode = StatusCode.valueOf(statusCode) ?: StatusCode.UNKNOWN,
-               headers = headers,
-               body = dataStream
+               statusCode = StatusCode.valueOf(second.statusCode) ?: StatusCode.UNKNOWN,
+               headers = second.headers,
+               body = third.get()
            )
        }
     }

@@ -2,9 +2,9 @@ package com.github.michalhodan.jiraalert.endpoint
 
 import com.github.michalhodan.jiraalert.http.client.IApiClient
 import com.github.michalhodan.jiraalert.http.request.Request
-import com.github.michalhodan.jiraalert.parser.IParser
+import com.github.michalhodan.jiraalert.parser.IJsonParser
 
-abstract class AEndpoint(protected val client: IApiClient, protected val parser: IParser) {
+abstract class AEndpoint(protected val client: IApiClient, protected val parser: IJsonParser) {
 
     protected abstract val endpoint: String
 
