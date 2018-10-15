@@ -8,10 +8,13 @@ import com.github.michalhodan.jiraalert.http.response.IResponse
 import com.github.michalhodan.jiraalert.http.response.Response
 import com.github.michalhodan.jiraalert.http.response.StatusCode
 
-sealed class ApiClient(credentials: Credentials): IApiClient {
+sealed class ApiClient(credentials: Credentials, headers: HashMap<String, String>): IApiClient {
 
     init {
-        FuelManager.instance.basePath = credentials.url
+        FuelManager.instance.apply {
+            basePath = credentials.url
+            baseHeaders = headers + ("Accept" to "application/json")
+        }
     }
 
     override suspend fun request(request: Request): IResponse {
@@ -29,9 +32,6 @@ sealed class ApiClient(credentials: Credentials): IApiClient {
        }
     }
 
-    class Basic(credentials: Credentials): ApiClient(credentials) {
-        init {
-            FuelManager.instance.baseHeaders = mapOf("Authorization" to "Basic ${credentials.authToken}")
-        }
-    }
+    class Basic(credentials: Credentials):
+        ApiClient(credentials, hashMapOf("Authorization" to "Basic ${credentials.authToken}"))
 }
