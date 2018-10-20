@@ -1,5 +1,6 @@
 package com.github.michalhodan.jiraalert
 
+import com.github.michalhodan.jiraalert.endpoint.board.Board
 import com.github.michalhodan.jiraalert.endpoint.myself.Myself
 import com.github.michalhodan.jiraalert.http.Provider
 import com.github.michalhodan.jiraalert.parser.JsonParser
@@ -14,7 +15,9 @@ fun main(args: Array<String>) {
     )
 
     runBlocking {
-        Myself(client, JsonParser()).get()
+        val tmp = Board(client, JsonParser.make()).get(5)
+
+        println(tmp)
     }
 }
 

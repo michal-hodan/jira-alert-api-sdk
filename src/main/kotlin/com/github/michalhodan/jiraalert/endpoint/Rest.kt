@@ -30,5 +30,7 @@ sealed class Rest(protected val client: IApiClient, protected val parser: IJsonP
 
     protected suspend fun IApiClient.post() = request(Request.post(path))
 
+    protected suspend fun IApiClient.get(id: Int) = request(Request.get("$path/$id"))
+
     protected inline fun <reified T : Any> IResponse.deserialize() = parser.deserialize(body, T::class)
 }
