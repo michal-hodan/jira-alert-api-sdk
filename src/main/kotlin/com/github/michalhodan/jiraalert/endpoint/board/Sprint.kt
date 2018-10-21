@@ -1,5 +1,6 @@
 package com.github.michalhodan.jiraalert.endpoint.board
 
+import kotlin.collections.List as KList
 import com.github.michalhodan.jiraalert.endpoint.Rest
 import com.github.michalhodan.jiraalert.http.client.IApiClient
 import com.github.michalhodan.jiraalert.parser.IJsonParser
@@ -10,9 +11,7 @@ class Sprint(client: IApiClient, parser: IJsonParser, board: Board.Response) : R
 
     suspend fun all() = client.get().deserialize<List>()
 
-    suspend fun get(id: Int) = client.get(id).deserialize<Response>()
-
-    data class List(val results: kotlin.collections.List<Response>)
+    data class List(val values: KList<Response>)
 
     data class Response(
         val id: Int,
